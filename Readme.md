@@ -14,3 +14,27 @@ Add new module
 ```
 python manage.py startapp members
 ```
+Install MySqlClient
+```
+pip install mysqlclient 
+```
+Makemigrations
+```
+python manage.py makemigrations 
+```
+Migrate
+```
+python manage.py migrate
+```
+Create admin
+```
+python manage.py createsuperuser 
+```
+Run
+```
+python manage.py runserver
+```
+Makemigrations module
+```
+python manage.py makemigrations members 
+```
