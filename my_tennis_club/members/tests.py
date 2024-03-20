@@ -12,7 +12,7 @@ def create_member(name, surname, email, mobile_phone):
 
 class MembersModelTests(TestCase):
     def test_should_return_empty_response(self):
-        response = self.client.get(reverse("members:members"))
+        response = self.client.get(reverse("members:members-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '')
 
@@ -21,7 +21,6 @@ class MembersModelTests(TestCase):
         create_member('Max', 'Pain', 'max.pain@test.com', '7654321')
         members = Member.objects.all().values()
         expected_json = json.dumps(list(members))
-
-        response = self.client.get(reverse("members:members"))
+        response = self.client.get(reverse("members:members-list"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, expected_json)
+        self.assertEqual(json.dumps(response.json()), expected_json)
