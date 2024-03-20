@@ -113,3 +113,27 @@ class MembersModelTests(TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.content, b'Member with id 1 not found')
+
+    def test_should_update_member(self):
+        create_member('John', 'Dou', 'john.dou@test.com', '1234567')
+
+        new_member = Member(name='NewJohn', surname='NewDou', email='newjohn.dou@test.com', mobile_phone='1234567')
+        request_body = MemberSerializer(new_member).data
+
+        response = self.client.put(reverse("members:members-update", kwargs={'pk': 1}), request_body,
+                                   content_type="application/json")
+        member = Member.objects.filter(email='newjohn.dou@test.com').first()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(member.__str__(), new_member.__str__())
+
+    def test_should_return_not_found_when_update(self):
+        new_member = Member(name='NewJohn', surname='NewDou', email='newjohn.dou@test.com', mobile_phone='1234567')
+        request_body = MemberSerializer(new_member).data
+
+        response = self.client.put(reverse("members:members-update", kwargs={'pk': 1}), request_body,
+                                   content_type="application/json")
+        member = Member.objects.filter(email='newjohn.dou@test.com').first()
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.content, b'{"detail":"No Member matches the given query."}')
