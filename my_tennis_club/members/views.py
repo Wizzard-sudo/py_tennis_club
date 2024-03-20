@@ -27,3 +27,8 @@ class MemberUpdateView(generics.UpdateAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     http_method_names = ['put']
+
+class MemberDeleteView(generics.DestroyAPIView):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    http_method_names = ['delete']
