@@ -63,7 +63,7 @@ class MembersModelTests(TestCase):
                             {'mobile_phone': ['This field may not be blank.']}),
                            (Member(name='John', surname='Dou'),
                             {'email': ['This field may not be blank.'],
-                            'mobile_phone': ['This field may not be blank.']},),
+                             'mobile_phone': ['This field may not be blank.']},),
                            (Member(name='John'),
                             {'surname': ['This field may not be blank.'],
                              'email': ['This field may not be blank.'],
@@ -81,3 +81,19 @@ class MembersModelTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), error_dict)
+
+    def test_should_return_member_by_id(self):
+        create_member('John', 'Dou', 'john.dou@test.com', '1234567')
+        member = Member.objects.get(id=1)
+        expected_json = MemberSerializer(member).data
+
+        response = self.client.get(reverse("members:member-get", kwargs={'id': 1}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(MemberSerializer(response.json()).data, expected_json)
+
+    def test_should_return_member_not_found(self):
+        response = self.client.get(reverse("members:member-get", kwargs={'id': 1}))
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.content, b'Member with id 1 not found')
