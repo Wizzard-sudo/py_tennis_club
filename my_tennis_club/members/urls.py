@@ -8,4 +8,5 @@ urlpatterns = [
     path("get/<pk>/", views.MemberRetrieveAPIView.as_view(), name="member-get"),
     path("create/", views.MemberCreateView.as_view(), name="members-save"),
     path("update/<pk>", views.MemberUpdateView.as_view(), name="members-update"),
+    path("delete/<pk>", views.MemberDeleteView.as_view(), name="members-delete"),
 ]

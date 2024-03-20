@@ -96,9 +96,9 @@ class MembersModelTests(TestCase):
         response = self.client.get(reverse("members:member-get", kwargs={'pk': 1}))
 
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.content, b'Member with id 1 not found')
+        self.assertEqual(response.content, b'{"detail":"No Member matches the given query."}')
 
-    def test_should_return_member_by_id(self):
+    def test_should_return_member_by_id_response(self):
         create_member('John', 'Dou', 'john.dou@test.com', '1234567')
         member = Member.objects.get(id=1)
         expected_json = MemberSerializer(member).data
@@ -108,7 +108,7 @@ class MembersModelTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(MemberSerializer(response.json()).data, expected_json)
 
-    def test_should_return_member_not_found(self):
+    def test_should_return_member_not_found_response(self):
         response = self.client.get(reverse("members:member-get", kwargs={'pk': 1}))
 
         self.assertEqual(response.status_code, 404)
@@ -136,4 +136,20 @@ class MembersModelTests(TestCase):
         member = Member.objects.filter(email='newjohn.dou@test.com').first()
 
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.content, b'{"detail":"No Member matches the given query."}')
+
+    def test_should_delete_member(self):
+        create_member('John', 'Dou', 'john.dou@test.com', '1234567')
+        self.assertEqual(Member.objects.all().count(), 1)
+
+        response = self.client.delete(reverse("members:members-delete", kwargs={'pk': 1}))
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Member.objects.all().count(), 0)
+
+    def test_should_return_not_found_when_delete_member(self):
+        response = self.client.delete(reverse("members:members-delete", kwargs={'pk': 1}))
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(Member.objects.all().count(), 0)
         self.assertEqual(response.content, b'{"detail":"No Member matches the given query."}')
