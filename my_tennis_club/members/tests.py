@@ -45,11 +45,11 @@ class MembersModelTests(TestCase):
         new_member = Member(name='John', surname='Dou', email='john.dou@test.com', mobile_phone='1234567')
         request_body = MemberSerializer(new_member).data
 
-        self.assertEqual(Member.objects.all().count(), 1);
+        self.assertEqual(Member.objects.all().count(), 1)
 
         response = self.client.post(reverse("members:members-save"), request_body, content_type="application/json")
 
-        self.assertEqual(Member.objects.all().count(), 1);
+        self.assertEqual(Member.objects.all().count(), 1)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {'email': ['member with this email already exists.']})
 
@@ -81,6 +81,22 @@ class MembersModelTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), error_dict)
+
+    def test_should_return_member_by_id(self):
+        create_member('John', 'Dou', 'john.dou@test.com', '1234567')
+        member = Member.objects.get(id=1)
+        expected_json = MemberSerializer(member).data
+
+        response = self.client.get(reverse("members:member-get", kwargs={'id': 1}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(MemberSerializer(response.json()).data, expected_json)
+
+    def test_should_return_member_not_found(self):
+        response = self.client.get(reverse("members:member-get", kwargs={'id': 1}))
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.content, b'Member with id 1 not found')
 
     def test_should_return_member_by_id(self):
         create_member('John', 'Dou', 'john.dou@test.com', '1234567')

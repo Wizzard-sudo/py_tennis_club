@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponseNotFound
 from rest_framework import generics
 from django.shortcuts import render
 
@@ -24,3 +24,9 @@ class MemberCreateView(generics.CreateAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     http_method_names = ['post']
+
+
+class MemberUpdateView(generics.UpdateAPIView):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    http_method_names = ['put']
