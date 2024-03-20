@@ -9,4 +9,5 @@ class Member(models.Model):
     sex = models.CharField(max_length=10, null=True)
 
     def __str__(self):
-        return f'Name: %s %s; Email: %s;' % (self.name, self.surname, self.email)
+        return f'Name: %s %s; Email: %s; Mobile Phone: %s; Sex: %s' % (self.name, self.surname, self.email,
+                                                                       self.mobile_phone, self.sex)
