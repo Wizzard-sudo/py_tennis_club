@@ -5,7 +5,13 @@ from .models import Member
 from .serializers import MemberSerializer
 
 
-class MessageListView(generics.ListAPIView):
+class MemberListView(generics.ListAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     http_method_names = ['get']
+
+
+class MemberCreateView(generics.CreateAPIView):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    http_method_names = ['post']
