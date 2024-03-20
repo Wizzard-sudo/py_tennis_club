@@ -1,13 +1,17 @@
-import json
-
-from django.http import HttpResponse
+from rest_framework import generics
 from django.shortcuts import render
 
 from .models import Member
+from .serializers import MemberSerializer
 
 
-# Create your views here.
-def members(request):
-    members = Member.objects.all().values()
-    json_data = json.dumps(list(members))
-    return HttpResponse(json_data)
+class MemberListView(generics.ListAPIView):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    http_method_names = ['get']
+
+
+class MemberCreateView(generics.CreateAPIView):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    http_method_names = ['post']
